@@ -1,10 +1,12 @@
 :root {
     --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-    --glass-bg: rgba(255, 255, 255, 0.85);
-    --text-main: #1f2937;
-    --text-muted: #6b7280;
+    --glass-bg: rgba(255, 255, 255, 0.08); /* 👈 glass transparency */
+    --text-main: #e5e7eb;
+    --text-muted: #cbd5f5;
     --transition-smooth: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    --border-glow: rgba(99, 102, 241, 0.75);
 }
+
 
 * {
     margin: 0;
@@ -14,13 +16,15 @@
 }
 
 body {
-    height: 100vh;
+    min-height: 100vh; 
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 40px 0; /* Adds space at top/bottom when scrolling */
     background: url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=2070') no-repeat center center/cover;
     position: relative;
+    overflow-y: auto; /* Enable vertical scroll */
 }
 
 /* Dark Overlay */
@@ -39,18 +43,23 @@ body::before {
 
 .form-box {
     width: 400px;
-    min-height: 480px; /* Reduced base height */
-    height: auto; /* Allows the box to grow/shrink */
+    height: auto;
     background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    padding: 30px 40px 40px 40px; /* Increased padding for better balance */
+    backdrop-filter: blur(10px);
+
+    padding: 30px 40px 40px 40px;
     border-radius: 24px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    transition: height 0.4s ease; /* Smooth height transition */
+
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+
+    box-shadow:
+        0 0 25px var(--border-glow),
+        inset 0 0 18px rgba(255, 255, 255, 0.05);
+
     position: relative;
-    overflow: hidden;
+    margin-bottom: 20px;
 }
+
 
 .button-box {
     width: 240px;
@@ -135,7 +144,7 @@ body::before {
 .forgot-link { text-align: right; margin-top: -5px; }
 .forgot-link a {
     font-size: 12px;
-    color: #6366f1;
+    color: #ffffff;
     text-decoration: none;
     font-weight: 500;
 }
@@ -285,3 +294,75 @@ body::before {
     opacity: 1;
     transform: translateY(0);
 }
+
+select.input-field {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+    cursor: pointer;
+}
+
+/* Toast Notification Styles */
+.toast-notification {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    background: #fff;
+    padding: 15px 25px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideIn 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+.toast-notification.error { border-left: 5px solid #ef4444; }
+.toast-notification.success { border-left: 5px solid #10b981; }
+
+.toast-notification.error i { color: #ef4444; }
+.toast-notification.success i { color: #10b981; }
+
+/* Progress Bar Animation */
+.progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    background: rgba(0,0,0,0.05);
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: inherit;
+    animation: progress 4s linear forwards;
+}
+
+.error .progress-bar::after { background: #ef4444; }
+.success .progress-bar::after { background: #10b981; }
+
+@keyframes slideIn {
+    from { transform: translateX(120%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes progress {
+    from { width: 100%; }
+    to { width: 0%; }
+}
+
